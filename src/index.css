@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+html {
+	scrollbar-width: thin; /* For Firefox */
+	scrollbar-color: #aaaaaa #1e1e1e;
+}
+
+html::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+pre {
+	white-space: pre-wrap; /* Allow text to wrap */
+	border-left: 3px solid #3f3f46; /* Soft border color (like Tailwind's zinc-700) */
+	padding-inline-start: 1rem;
+	margin-block: 1rem;
+}
+ul,
+ol {
+	margin-bottom: 1rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+li {
+	list-style-type: disc; /* Use disc for list items */
+	/* list-style-position: inside; Position the list marker inside the content box */
+	padding-block: 0.25rem; /* Add vertical padding */
+	margin-block: 0.25rem; /* Add vertical margin */
+}
+
+code {
+	background-color: #2d2d2d; /* Dark gray (adjust for your theme) */
+	color: #dcdcdc; /* Light gray text */
+	font-family: monospace;
+	/* padding: 0.1rem 0.5rem; */
+	padding-inline: 0.5rem; /* Horizontal padding */
+	border-radius: 0.375rem; /* Rounded edges */
+	font-size: 0.95rem;
+	display: inline-block;
+	border: 1px solid #3f3f46; /* Soft border color (like Tailwind's zinc-700) */
+}
+
+p {
+	display: block;
+	/* margin-block-start: 1em; */
+	/* margin-block-end: 1em; */
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	unicode-bidi: isolate;
+}
+table {
+	width: auto;
+	border-collapse: collapse;
+	background-color: #333;
+	color: #eee;
+	font-family: sans-serif;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+th,
+td {
+	border: 1px solid #555;
+	padding: 12px 15px;
+	text-align: left;
+}
+
+th {
+	background-color: #555;
+	color: #fff;
+	font-weight: bold;
+}
+
+tr:nth-child(even) {
+	background-color: #444;
+}
