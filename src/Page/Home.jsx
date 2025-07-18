@@ -105,16 +105,6 @@ function Message() {
 					This website is under development and temporary available
 					for premium question access{" "}
 				</p>
-				<p>
-					If anyone can help with testcase generation, please Mail us
-					at{" "}
-					<a
-						className="text-blue-600 underline"
-						href="mailto:support@nextleet.com"
-					>
-						Email Us
-					</a>
-				</p>
 			</div>
 		</div>
 	);
