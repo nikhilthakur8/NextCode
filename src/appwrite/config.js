@@ -1,8 +1,8 @@
-import { Query, Client, Databases, ID } from "node-appwrite";
+import { Query, Client, Databases } from "node-appwrite";
 
 const client = new Client()
-	.setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT) // Your Appwrite Endpoint
-	.setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID); // Your Appwrite Project ID
+	.setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT)
+	.setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID);
 
 const databases = new Databases(client);
 
@@ -35,8 +35,8 @@ function questionDetailsParser(response) {
 export const getProblemDetails = async (titleSlug) => {
 	try {
 		const response = await databases.listDocuments(
-			import.meta.env.VITE_APPWRITE_DATABASE_ID, // Replace with your database ID
-			import.meta.env.VITE_APPWRITE_COLLECTION_ID, // Replace with your collection ID
+			import.meta.env.VITE_APPWRITE_DATABASE_ID,
+			import.meta.env.VITE_APPWRITE_COLLECTION_ID,
 			[Query.equal("questionTitleSlug", titleSlug)]
 		);
 
@@ -50,72 +50,74 @@ export const getProblemDetails = async (titleSlug) => {
 		throw error;
 	}
 };
-export const getAllProblems = async (skip = 0, limit = 10) => {
+
+export const getAllProblems = async (skip = 0, limit = 10, difficulty = "") => {
 	try {
+		const queries = [
+			Query.limit(limit),
+			Query.offset(skip),
+			Query.select([
+				"questionTitleSlug",
+				"questionTitle",
+				"questionFrontendId",
+				"questionDifficulty",
+				"stats",
+				"topicTags",
+			]),
+			Query.orderAsc("questionFrontendId"),
+		];
+		if (difficulty) {
+			queries.push(Query.equal("questionDifficulty", difficulty));
+		}
 		const response = await databases.listDocuments(
 			import.meta.env.VITE_APPWRITE_DATABASE_ID,
 			import.meta.env.VITE_APPWRITE_COLLECTION_ID,
-			[
-				Query.limit(limit),
-				Query.offset(skip),
-				Query.select([
-					"questionTitleSlug",
-					"questionTitle",
-					"questionFrontendId",
-					"questionDifficulty",
-					"stats",
-					"topicTags",
-				]),
-				Query.orderAsc("questionFrontendId"),
-			]
+			queries
 		);
-		if (response.documents.length > 0) {
-			const parsedData = response.documents.map((doc) =>
-				questionDetailsParser(doc)
-			);
-			return {
-				totalDocs: response.total,
-				allProblems: parsedData,
-			};
-		}
-		// } else {
-		// 	throw new Error("Problem not found");
-		// }
+		const parsedData = response.documents.map((doc) =>
+			questionDetailsParser(doc)
+		);
+		return {
+			totalDocs: response.total,
+			allProblems: parsedData,
+		};
 	} catch (error) {
 		console.error("Error fetching problem details:", error);
 		throw error;
 	}
 };
 
-export const fetchProblems = async (search, skip = 0, limit = 10) => {
+export const fetchProblems = async (search, skip = 0, limit = 10, difficulty = "") => {
 	try {
+		const queries = [
+			Query.limit(limit),
+			Query.offset(skip),
+			Query.search("questionTitle", search),
+			Query.select([
+				"questionTitleSlug",
+				"questionTitle",
+				"questionFrontendId",
+				"questionDifficulty",
+				"stats",
+				"topicTags",
+			]),
+			Query.orderAsc("questionFrontendId"),
+		];
+		if (difficulty) {
+			queries.push(Query.equal("questionDifficulty", difficulty));
+		}
 		const response = await databases.listDocuments(
 			import.meta.env.VITE_APPWRITE_DATABASE_ID,
 			import.meta.env.VITE_APPWRITE_COLLECTION_ID,
-			[
-				Query.limit(limit),
-				Query.offset(skip),
-				Query.search("questionTitle", search),
-				Query.select([
-					"questionTitleSlug",
-					"questionTitle",
-					"questionFrontendId",
-					"questionDifficulty",
-					"stats",
-					"topicTags",
-				]),
-				Query.orderAsc("questionFrontendId"),
-			]
+			queries
 		);
-		if (response.documents.length > 0) {
-			const parsedData = response.documents.map((doc) =>
-				questionDetailsParser(doc)
-			);
-			return {
-				totalDocs: response.total,
-				allProblems: parsedData,
-			};
-		}
+		const parsedData = response.documents.map((doc) =>
+			questionDetailsParser(doc)
+		);
+		return {
+			totalDocs: response.total,
+			allProblems: parsedData,
+		};
 	} catch (error) {
 		console.error("Error fetching problems:", error);
 		throw error;

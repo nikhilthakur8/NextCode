@@ -1,9 +1,9 @@
 import { Editor, loader } from "@monaco-editor/react";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import "react-reflex/styles.css";
 
 export const CodeEditor = ({
-	problemDetails,
+	questionDetails,
 	language = "cpp",
 	theme = "leetcode-dark",
 	codeChange,
@@ -40,7 +40,9 @@ export const CodeEditor = ({
 		});
 	}, []);
 
-	const handleEditorDidMount = (editor, monaco) => {
+	const defaultCode = getDefaultCode(questionDetails, language);
+
+	const handleEditorDidMount = (editor) => {
 		editorInstanceRef.current = editor;
 		if (codeChange) {
 			editor.onDidChangeModelContent(() => {
@@ -54,8 +56,8 @@ export const CodeEditor = ({
 			<div className="overflow-hidden h-full">
 				<Editor
 					height="100%"
-					defaultLanguage={language}
-					defaultValue={problemDetails?.codeSnippets}
+					language={language}
+					value={defaultCode}
 					theme={theme}
 					onMount={handleEditorDidMount}
 					options={{
@@ -77,3 +79,11 @@ export const CodeEditor = ({
 		</div>
 	);
 };
+
+function getDefaultCode(questionDetails, language) {
+	if (!questionDetails?.codeSnippets) return "";
+	const snippet = questionDetails.codeSnippets.find(
+		(s) => s.langSlug === language
+	);
+	return snippet?.code || questionDetails.codeSnippets[0]?.code || "";
+}
